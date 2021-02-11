@@ -4,11 +4,26 @@ from ace_cream import ace_cream
 # please change the hash name to whatever you want
 f = open('build/00b83e5eca94f72bebad3731b31dda34.dat','rb')
 st = f.read()
-y = np.frombuffer(st, dtype=np.uint8)
+x = np.frombuffer(st, dtype=np.uint8)
 # save the sent image explicitly (manually)
 f = open('build/00b83e5eca94f72bebad3731b31dda34.jpg','rb')
 st = f.read()
-x = np.frombuffer(st, dtype=np.uint8)
+y = np.frombuffer(st, dtype=np.uint8)
+dic = {}
+index = 0
+for i in range(len(x)):
+    if len(dic) == 256:
+        break
+        index = i
+    if dic.get(x[i]):
+        continue
+    dic[x[i]] = y[i]
+predict_wrong = 0
+for i in range(index, len(x)):
+    if dic[x[i]] != y[i]:
+        predict_wrong += 1
+print(predict_wrong)
+# predict_wrong = 0, totally dependency mapping
 x = x.astype(np.float)
 y = y.astype(np.float)
 print(np.corrcoef(x, y)[0, 1])
